@@ -23,12 +23,13 @@ func main() {
 	// 定义命令行参数
 	recursive := flag.Bool("r", false, "是否递归搜索子目录")
 	ignoreCase := flag.Bool("i", false, "是否忽略文件名大小写")
+	ignoreExt := flag.Bool("e", false, "是否忽略文件扩展名")
 	flag.Parse()
 
 	// 检查剩余的参数（两个目录路径）
 	args := flag.Args()
 	if len(args) != 2 {
-		fmt.Println("使用方法: go run main.go [-r] [-i] <目录1> <目录2>")
+		fmt.Println("使用方法: go run main.go [-r] [-i] [-e] <目录1> <目录2>")
 		os.Exit(1)
 	}
 
@@ -74,6 +75,9 @@ func main() {
 			if *ignoreCase {
 				fileName = strings.ToLower(fileName)
 			}
+			if *ignoreExt {
+				fileName = strings.TrimSuffix(fileName, filepath.Ext(fileName))
+			}
 			files1[fileName] = append(files1[fileName], path)
 		}
 		return nil
@@ -109,6 +113,9 @@ func main() {
 			fileName := info.Name()
 			if *ignoreCase {
 				fileName = strings.ToLower(fileName)
+			}
+			if *ignoreExt {
+				fileName = strings.TrimSuffix(fileName, filepath.Ext(fileName))
 			}
 			files2[fileName] = append(files2[fileName], path)
 		}

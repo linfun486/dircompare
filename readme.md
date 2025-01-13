@@ -7,18 +7,20 @@
 - 支持比较两个目录中的文件名
 - 支持递归搜索子目录
 - 支持文件名大小写敏感/不敏感匹配
+- 支持忽略文件扩展名
 - 显示重复文件的具体路径
 
 ## 使用方法
 
 ```bash
-go run main.go [-r] [-i] <目录1> <目录2>
+go run main.go [-r] [-i] [-e] <目录1> <目录2>
 ```
 
 ### 参数说明
 
 - `-r`: 递归搜索子目录（可选）
 - `-i`: 忽略文件名大小写（可选）
+- `-e`: 忽略文件扩展名（可选）
 - `目录1`: 第一个要比较的目录路径
 - `目录2`: 第二个要比较的目录路径
 
@@ -39,11 +41,16 @@ go run main.go -r /path/to/dir1 /path/to/dir2
 go run main.go -i /path/to/dir1 /path/to/dir2
 ```
 
-4. 递归且忽略大小写比较：
+4. 忽略文件扩展名比较：
 ```bash
-go run main.go -r -i /path/to/dir1 /path/to/dir2
+go run main.go -e /path/to/dir1 /path/to/dir2
+```
+
+5. 递归且忽略大小写和扩展名比较：
+```bash
+go run main.go -r -i -e /path/to/dir1 /path/to/dir2
 ```
 
 ## 输出说明
 
-程序会输出在两个目录中发现的相同文件名，并显示它们的完整路径。如果使用了 `-i` 参数，则 "Test.txt" 和 "test.TXT" 会被视为相同文件。
+程序会输出在两个目录中发现的相同文件名，并显示它们的完整路径。如果使用了 `-i` 参数，则 "Test.txt" 和 "test.TXT" 会被视为相同文件。如果使用了 `-e` 参数，则 "test.txt" 和 "test.doc" 会被视为相同文件。
