@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type item struct {
@@ -21,12 +22,13 @@ type item struct {
 func main() {
 	// 定义命令行参数
 	recursive := flag.Bool("r", false, "是否递归搜索子目录")
+	ignoreCase := flag.Bool("i", false, "是否忽略文件名大小写")
 	flag.Parse()
 
 	// 检查剩余的参数（两个目录路径）
 	args := flag.Args()
 	if len(args) != 2 {
-		fmt.Println("使用方法: go run main.go [-r] <目录1> <目录2>")
+		fmt.Println("使用方法: go run main.go [-r] [-i] <目录1> <目录2>")
 		os.Exit(1)
 	}
 
@@ -68,7 +70,11 @@ func main() {
 		}
 
 		if !info.IsDir() {
-			files1[info.Name()] = append(files1[info.Name()], path)
+			fileName := info.Name()
+			if *ignoreCase {
+				fileName = strings.ToLower(fileName)
+			}
+			files1[fileName] = append(files1[fileName], path)
 		}
 		return nil
 	})
@@ -100,7 +106,11 @@ func main() {
 		}
 
 		if !info.IsDir() {
-			files2[info.Name()] = append(files2[info.Name()], path)
+			fileName := info.Name()
+			if *ignoreCase {
+				fileName = strings.ToLower(fileName)
+			}
+			files2[fileName] = append(files2[fileName], path)
 		}
 		return nil
 	})
