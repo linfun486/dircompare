@@ -19,6 +19,23 @@ type item struct {
 	Path2    string
 }
 
+// 检查是否为系统隐藏文件
+func isHiddenFile(name string) bool {
+	// Mac系统隐藏文件
+	if name == ".DS_Store" || strings.HasPrefix(name, "._") {
+		return true
+	}
+	// Windows系统文件
+	if strings.HasPrefix(name, "desktop.ini") || strings.HasPrefix(name, "thumbs.db") || strings.HasPrefix(name, "$") {
+		return true
+	}
+	// 通用隐藏文件（以.开头的文件）
+	// if strings.HasPrefix(name, ".") {
+	// 	return true
+	// }
+	return false
+}
+
 func main() {
 	// 定义命令行参数
 	recursive := flag.Bool("r", false, "是否递归搜索子目录")
@@ -72,6 +89,10 @@ func main() {
 
 		if !info.IsDir() {
 			fileName := info.Name()
+			// 跳过系统隐藏文件
+			if isHiddenFile(fileName) {
+				return nil
+			}
 			if *ignoreCase {
 				fileName = strings.ToLower(fileName)
 			}
@@ -111,6 +132,10 @@ func main() {
 
 		if !info.IsDir() {
 			fileName := info.Name()
+			// 跳过系统隐藏文件
+			if isHiddenFile(fileName) {
+				return nil
+			}
 			if *ignoreCase {
 				fileName = strings.ToLower(fileName)
 			}
